@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CRUD_For_Users.Services
 {
-    internal interface IUserServices
+    public interface IUserServices
     {
     }
 }
