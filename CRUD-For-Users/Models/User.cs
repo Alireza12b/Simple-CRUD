@@ -11,7 +11,7 @@ namespace CRUD_For_Users.Models
         public int Id { get; set; }
         public string FullName { get; set; }
         public int Phone { get; set; }
-        DateTime DateOfBirth { get; set; }
-        DateTime UserCreationDate { get; set; }
+        public DateTime DateOfBirth { get; set; }
+        public DateTime UserCreationDate { get; set; }
     }
 }

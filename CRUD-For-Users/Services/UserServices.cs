@@ -27,7 +27,15 @@ namespace CRUD_For_Users.Services
 
         public void CreateUser(string fullName, int phone, DateTime dateOfBirth)
         {
-            throw new NotImplementedException();
+            var newUser = new User()
+            {
+                FullName = fullName,
+                Phone = phone,
+                DateOfBirth = dateOfBirth,
+                UserCreationDate = DateTime.Now
+            };
+            user.Add(newUser);
+
         }
     }
 }
