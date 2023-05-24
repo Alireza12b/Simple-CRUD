@@ -71,6 +71,9 @@ namespace CRUD_For_Users.Services
             {
                 throw new UserNotFoundException("User Not Found !");
             }
+
+            string updatedUser = JsonConvert.SerializeObject(user);
+            File.WriteAllText(mainPath, updatedUser);
         }
     }
 }
