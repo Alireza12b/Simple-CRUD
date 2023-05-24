@@ -1,4 +1,5 @@
-﻿using CRUD_For_Users.Services;
+﻿using CRUD_For_Users.Exceptions;
+using CRUD_For_Users.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,7 +40,7 @@ namespace CRUD_For_Users.ConsoleMenu
         {
             Console.Clear();
             Console.WriteLine("Enter the new user full name :" +
-                "\n 0-Return to MainMenu");
+                "\n0-Return to MainMenu");
             string fullName = Console.ReadLine();
 
             Console.WriteLine("Enter the user phone number :");
@@ -50,7 +51,7 @@ namespace CRUD_For_Users.ConsoleMenu
 
             userServices.CreateUser(fullName, phone, birthDate);
 
-            Console.Clear() ;
+            Console.Clear();
             Console.WriteLine("User added successfuly ! press any key to continue");
             Console.ReadKey();
             Console.Clear();
@@ -60,7 +61,8 @@ namespace CRUD_For_Users.ConsoleMenu
         void ListMenu()
         {
             Console.Clear();
-            Console.WriteLine("Enter the ID of a user that you want to change : ");
+            Console.WriteLine("Enter the ID of a user that you want to change :" +
+                "\n0-Return to MainMenu");
 
             var list = userServices.ReadUser();
             foreach (var user in list)
@@ -68,21 +70,65 @@ namespace CRUD_For_Users.ConsoleMenu
                 Console.WriteLine($"ID = {user.Id} | Name = {user.FullName} | Phone = {user.Phone} | BirthDate = {user.DateOfBirth.ToString("yyyy-MM-dd")} | UserCreationTime = {user.UserCreationDate}");
             }
 
-            bool isIdSelection = int.TryParse(Console.ReadLine(),out int idSelection);
-            if (isIdSelection)
+            bool isValidIdSelection = int.TryParse(Console.ReadLine(), out int idSelection);
+            if (idSelection == 0)
+            {
+                Console.Clear();
+                MainMenu();
+            }
+
+            if (isValidIdSelection)
             {
                 Console.WriteLine("What do you want to do with this ID ?" +
-                    "1-Update" +
-                    "2-Delete");
-                int.TryParse(Console.ReadLine(),out int idManagementSelection);
+                    "\n1-Update" +
+                    "\n2-Delete");
+                int.TryParse(Console.ReadLine(), out int idManagementSelection);
 
                 if (idManagementSelection == 1)
                 {
+                    Console.Clear();
+                    Console.WriteLine("Enter new Name of the user");
+                    string newName = Console.ReadLine();
+                    Console.WriteLine("Enter new Phone Number of the user");
+                    bool isValidNewPhone = int.TryParse(Console.ReadLine(),out int newPhone);
+                    Console.WriteLine("Enter new BirthDate of the user");
+                    DateTime newBirthDate = DateTime.Parse(Console.ReadLine());
 
+                    try
+                    {
+                        userServices.UpdateUser(idSelection,newName,newPhone,newBirthDate);
+                        Console.WriteLine("User updated Successfuly !");
+                        Console.ReadKey();
+                        Console.Clear();
+                        ListMenu();
+                    }
+                    catch (UserNotFoundException e)
+                    {
+                        Console.Clear();
+                        Console.WriteLine(e + "\npress any key to continue !");
+                        Console.ReadKey();
+                        Console.Clear();
+                        ListMenu();
+                    }
                 }
                 else if (idManagementSelection == 2)
-                {                 
-                    
+                {
+                    try
+                    {
+                        userServices.DeleteUser(idSelection);
+                        Console.WriteLine("User deleted Successfuly !");
+                        Console.ReadKey();
+                        Console.Clear();
+                        ListMenu();
+                    }
+                    catch (UserNotFoundException e)
+                    {
+                        Console.Clear();
+                        Console.WriteLine(e + "\npress any key to continue !");
+                        Console.ReadKey();
+                        Console.Clear();
+                        ListMenu();
+                    }
                 }
                 else
                 {
@@ -102,5 +148,6 @@ namespace CRUD_For_Users.ConsoleMenu
                 ListMenu();
             }
         }
+
     }
 }
