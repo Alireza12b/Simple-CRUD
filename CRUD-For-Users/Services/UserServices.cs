@@ -1,13 +1,9 @@
 ﻿using CRUD_For_Users.Exceptions;
 using CRUD_For_Users.Models;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
+using System.Globalization;
+using CsvHelper;
+using System.IO;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace CRUD_For_Users.Services
 {
@@ -18,12 +14,12 @@ namespace CRUD_For_Users.Services
 
         public UserServices()
         {
-            string jsonPath = @"DataStorage\Users.csv";
+            /*string jsonPath = @"DataStorage\Users.csv";
             string currentDirectory = Directory.GetCurrentDirectory();
-            mainPath = Path.Combine(currentDirectory, jsonPath);
+            mainPath = Path.Combine(currentDirectory, jsonPath);*/
+            mainPath = @"C:\Users\Alireza\Desktop\Users.csv";
 
-            string allText = File.ReadAllText(mainPath);
-            user = JsonConvert.DeserializeObject<List<User>>(allText) ?? new List<User>(); ;
+            user = ReadUsersFromCsv();
         }
 
         public void CreateUser(string fullName, int phone, DateTime dateOfBirth)
@@ -40,7 +36,7 @@ namespace CRUD_For_Users.Services
 
             var newUser = new User()
             {
-                Id = lastUserId++,
+                Id = lastUserId + 1,
                 FullName = fullName,
                 Phone = phone,
                 DateOfBirth = dateOfBirth,
@@ -48,8 +44,7 @@ namespace CRUD_For_Users.Services
             };
             user.Add(newUser);
 
-            string updatedUser = JsonConvert.SerializeObject(user);
-            File.WriteAllText(mainPath, updatedUser);
+            WriteUsersToCsv();
         }
 
         public List<User> ReadUser()
@@ -66,31 +61,49 @@ namespace CRUD_For_Users.Services
                 validUser.FullName = newName;
                 validUser.Phone = newPhone;
                 validUser.DateOfBirth = newDateOfBirth;
+                WriteUsersToCsv();
             }
             else
             {
                 throw new UserNotFoundException("User Not Found !");
             }
-
-            string updatedUser = JsonConvert.SerializeObject(user);
-            File.WriteAllText(mainPath, updatedUser);
         }
 
-        public void DeleteUser(User user)
+        public void DeleteUser(int id)
         {
-            var validUser = this.user.Find(u => u.Id == user.Id);
+            var validUser = user.Find(u => u.Id == id);
 
             if (validUser != null)
             {
                 this.user.Remove(validUser);
+                WriteUsersToCsv();
             }
             else
             {
                 throw new UserNotFoundException("User Not Found !");
             }
+        }
 
-            string updatedUser = JsonConvert.SerializeObject(user);
-            File.WriteAllText(mainPath, updatedUser);
+        public List<User> ReadUsersFromCsv()
+        {
+            var users = new List<User>();
+
+            using (var reader = new StreamReader(mainPath))
+            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+            {
+                users = csv.GetRecords<User>().ToList();
+            }
+
+            return users;
+        }
+
+        public void WriteUsersToCsv()
+        {
+            using (var writer = new StreamWriter(mainPath))
+            using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+            {
+                csv.WriteRecords(user);
+            }
         }
     }
 }
