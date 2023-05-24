@@ -8,5 +8,6 @@ namespace CRUD_For_Users.Services
 {
     public interface IUserServices
     {
+        void CreateUser(string fullName, int phone, DateTime dateOfBirth);
     }
 }

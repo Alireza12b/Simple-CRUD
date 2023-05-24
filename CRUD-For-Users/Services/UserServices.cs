@@ -24,7 +24,10 @@ namespace CRUD_For_Users.Services
             string allText = File.ReadAllText(mainPath);
             user = JsonConvert.DeserializeObject<List<User>>(allText);
         }
-        
 
+        public void CreateUser(string fullName, int phone, DateTime dateOfBirth)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
