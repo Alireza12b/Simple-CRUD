@@ -27,8 +27,19 @@ namespace CRUD_For_Users.Services
 
         public void CreateUser(string fullName, int phone, DateTime dateOfBirth)
         {
+            int lastUserId;
+            if (user.Count > 0)
+            {
+                lastUserId = user.Max(u => u.Id);
+            }
+            else
+            {
+                lastUserId = 0;
+            }
+
             var newUser = new User()
             {
+                Id = lastUserId++,
                 FullName = fullName,
                 Phone = phone,
                 DateOfBirth = dateOfBirth,
