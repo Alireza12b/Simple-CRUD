@@ -9,9 +9,9 @@ namespace CRUD_For_Users.Services
 {
     public interface IUserServices
     {
-        void CreateUser(string fullName, int phone, DateTime dateOfBirth);
+        void CreateUser(string fullName, long phone, DateTime dateOfBirth);
         List<User> ReadUser();
-        void UpdateUser(int id, string newName, int newPhone, DateTime newDateOfBirth);
+        void UpdateUser(int id, string newName, long newPhone, DateTime newDateOfBirth);
         void DeleteUser(int id);
     }
 }

@@ -38,24 +38,52 @@ namespace CRUD_For_Users.ConsoleMenu
 
         void AddMenu()
         {
-            Console.Clear();
-            Console.WriteLine("Enter the new user full name :" +
-                "\n0-Return to MainMenu");
-            string fullName = Console.ReadLine();
+            try
+            {
+                Console.Clear();
+                Console.WriteLine("Enter the new user full name :" +
+                    "\n0-Return to MainMenu");
+                string fullName = Console.ReadLine();
 
-            Console.WriteLine("Enter the user phone number :");
-            int phone = int.Parse(Console.ReadLine());
+                Console.WriteLine("Enter the user phone number :");
+                bool isValidPhone = long.TryParse(Console.ReadLine(), out long phone);
+                if (phone.ToString().Count() > 11 || phone.ToString().Count() < 11 || !isValidPhone)
+                {
+                    throw new PhoneNumberNotValid("PLease Enter valid Phone Number");
+                }
 
-            Console.WriteLine("Enter the user Birth Date");
-            DateTime birthDate = DateTime.Parse(Console.ReadLine());
+                Console.WriteLine("Enter the user Birth Date");
 
-            userServices.CreateUser(fullName, phone, birthDate);
+                bool isValidBirthDate = DateTime.TryParse(Console.ReadLine(), out DateTime birthDate);
+                if (birthDate >= DateTime.Now || !isValidBirthDate)
+                {
+                    throw new BirthDateNotValid("Please enter valid date time in corrent format");
+                }
 
-            Console.Clear();
-            Console.WriteLine("User added successfuly ! press any key to continue");
-            Console.ReadKey();
-            Console.Clear();
-            MainMenu();
+                userServices.CreateUser(fullName, phone, birthDate);
+
+                Console.Clear();
+                Console.WriteLine("User added successfuly ! press any key to continue");
+                Console.ReadKey();
+                Console.Clear();
+                MainMenu();
+            }
+            catch (BirthDateNotValid e)
+            {
+                Console.Clear();
+                Console.WriteLine(e + "\npress any key to continue !");
+                Console.ReadKey();
+                Console.Clear();
+                AddMenu();
+            }
+            catch (PhoneNumberNotValid ex)
+            {
+                Console.Clear();
+                Console.WriteLine(ex + "\npress any key to continue !");
+                Console.ReadKey();
+                Console.Clear();
+                AddMenu();
+            }
         }
 
         void ListMenu()
@@ -90,13 +118,13 @@ namespace CRUD_For_Users.ConsoleMenu
                     Console.WriteLine("Enter new Name of the user");
                     string newName = Console.ReadLine();
                     Console.WriteLine("Enter new Phone Number of the user");
-                    bool isValidNewPhone = int.TryParse(Console.ReadLine(),out int newPhone);
+                    bool isValidNewPhone = int.TryParse(Console.ReadLine(), out int newPhone);
                     Console.WriteLine("Enter new BirthDate of the user");
                     DateTime newBirthDate = DateTime.Parse(Console.ReadLine());
 
                     try
                     {
-                        userServices.UpdateUser(idSelection,newName,newPhone,newBirthDate);
+                        userServices.UpdateUser(idSelection, newName, newPhone, newBirthDate);
                         Console.WriteLine("User updated Successfuly !");
                         Console.ReadKey();
                         Console.Clear();

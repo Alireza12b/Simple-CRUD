@@ -14,15 +14,14 @@ namespace CRUD_For_Users.Services
 
         public UserServices()
         {
-            /*string jsonPath = @"DataStorage\Users.csv";
-            string currentDirectory = Directory.GetCurrentDirectory();
-            mainPath = Path.Combine(currentDirectory, jsonPath);*/
-            mainPath = @"C:\Users\Alireza\Desktop\Users.csv";
+            /*string? solutionFolderPath = Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory)?.Parent?.Parent?.Parent?.FullName;
+            string mainPath = Path.Combine(solutionFolderPath, "DataStorage/JsonBook.json");*/
+            mainPath = @"C:\Users\Alireza\Desktop\FileDataStorage.csv";
 
             user = ReadUsersFromCsv();
         }
 
-        public void CreateUser(string fullName, int phone, DateTime dateOfBirth)
+        public void CreateUser(string fullName, long phone, DateTime dateOfBirth)
         {
             int lastUserId;
             if (user.Count > 0)
@@ -52,7 +51,7 @@ namespace CRUD_For_Users.Services
             return user.ToList();
         }
 
-        public void UpdateUser(int id, string newName, int newPhone, DateTime newDateOfBirth)
+        public void UpdateUser(int id, string newName, long newPhone, DateTime newDateOfBirth)
         {
             var validUser = user.Find(u => u.Id == id);
 
