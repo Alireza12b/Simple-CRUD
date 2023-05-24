@@ -8,10 +8,10 @@ namespace CRUD_For_Users.Models
 {
     public class User
     {
-        public Guid Id { get; set; }
-        public string Name { get; set; }
-        public string Fname { get; set; }
+        public int Id { get; set; }
+        public string FullName { get; set; }
         public int Phone { get; set; }
         DateTime DateOfBirth { get; set; }
+        DateTime UserCreationDate { get; set; }
     }
 }
