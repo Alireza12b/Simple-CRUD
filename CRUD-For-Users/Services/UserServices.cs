@@ -1,4 +1,5 @@
-﻿using CRUD_For_Users.Models;
+﻿using CRUD_For_Users.Exceptions;
+using CRUD_For_Users.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -56,6 +57,20 @@ namespace CRUD_For_Users.Services
             return user.ToList();
         }
 
-        
+        public void UpdateUser(int id, string newName, int newPhone, DateTime newDateOfBirth)
+        {
+            var validUser = user.Find(u => u.Id == id);
+
+            if (validUser != null)
+            {
+                validUser.FullName = newName;
+                validUser.Phone = newPhone;
+                validUser.DateOfBirth = newDateOfBirth;
+            }
+            else
+            {
+                throw new UserNotFoundException("User Not Found !");
+            }
+        }
     }
 }

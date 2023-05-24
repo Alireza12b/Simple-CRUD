@@ -11,6 +11,6 @@ namespace CRUD_For_Users.Services
     {
         void CreateUser(string fullName, int phone, DateTime dateOfBirth);
         List<User> ReadUser();
-        void UpdateUser(User user);
+        void UpdateUser(int id, string newName, int newPhone, DateTime newDateOfBirth);
     }
 }
