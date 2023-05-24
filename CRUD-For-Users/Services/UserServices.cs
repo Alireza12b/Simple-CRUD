@@ -53,7 +53,7 @@ namespace CRUD_For_Users.Services
 
         public List<User> ReadUser()
         {
-            throw new NotImplementedException();
+            return user.ToList();
         }
     }
 }
