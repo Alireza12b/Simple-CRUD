@@ -36,6 +36,8 @@ namespace CRUD_For_Users.Services
             };
             user.Add(newUser);
 
+            string updatedUser = JsonConvert.SerializeObject(user);
+            File.WriteAllText(mainPath, updatedUser);
         }
     }
 }
