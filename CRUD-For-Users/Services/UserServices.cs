@@ -75,5 +75,22 @@ namespace CRUD_For_Users.Services
             string updatedUser = JsonConvert.SerializeObject(user);
             File.WriteAllText(mainPath, updatedUser);
         }
+
+        public void DeleteUser(User user)
+        {
+            var validUser = this.user.Find(u => u.Id == user.Id);
+
+            if (validUser != null)
+            {
+                this.user.Remove(validUser);
+            }
+            else
+            {
+                throw new UserNotFoundException("User Not Found !");
+            }
+
+            string updatedUser = JsonConvert.SerializeObject(user);
+            File.WriteAllText(mainPath, updatedUser);
+        }
     }
 }
