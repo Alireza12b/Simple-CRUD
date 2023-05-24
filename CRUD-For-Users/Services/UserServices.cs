@@ -50,5 +50,10 @@ namespace CRUD_For_Users.Services
             string updatedUser = JsonConvert.SerializeObject(user);
             File.WriteAllText(mainPath, updatedUser);
         }
+
+        public List<User> ReadUser()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
