@@ -25,7 +25,7 @@ namespace CRUD_For_Users.ConsoleMenu
             }
             else if (mainMenuSelection == 2)
             {
-
+                ListMenu();
             }
             else
             {
@@ -35,6 +35,31 @@ namespace CRUD_For_Users.ConsoleMenu
             }
         }
 
-        
+        void AddMenu()
+        {
+            Console.Clear();
+            Console.WriteLine("Enter the new user full name : " +
+                "\n 0-Return to MainMenu");
+            string fullName = Console.ReadLine();
+
+            Console.WriteLine("Enter the user phone number :");
+            int.TryParse(Console.ReadLine(), out int phone);
+
+            Console.WriteLine("Enter the user Birth Date");
+            DateTime birthDate = DateTime.Parse(Console.ReadLine());
+
+            userServices.CreateUser(fullName, phone, birthDate);
+
+            Console.Clear() ;
+            Console.WriteLine("User added successfuly ! press any key to continue");
+            Console.ReadKey();
+            Console.Clear();
+            MainMenu();
+        }
+
+        void ListMenu()
+        {
+
+        }
     }
 }
