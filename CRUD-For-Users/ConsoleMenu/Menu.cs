@@ -3,6 +3,7 @@ using CRUD_For_Users.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -114,16 +115,26 @@ namespace CRUD_For_Users.ConsoleMenu
 
                 if (idManagementSelection == 1)
                 {
-                    Console.Clear();
-                    Console.WriteLine("Enter new Name of the user");
-                    string newName = Console.ReadLine();
-                    Console.WriteLine("Enter new Phone Number of the user");
-                    bool isValidNewPhone = int.TryParse(Console.ReadLine(), out int newPhone);
-                    Console.WriteLine("Enter new BirthDate of the user");
-                    DateTime newBirthDate = DateTime.Parse(Console.ReadLine());
-
                     try
                     {
+                        Console.Clear();
+                        Console.WriteLine("Enter new Name of the user");
+                        string newName = Console.ReadLine();
+
+                        Console.WriteLine("Enter new Phone Number of the user");
+                        bool isValidNewPhone = int.TryParse(Console.ReadLine(), out int newPhone);
+                        if (newPhone.ToString().Count() > 11 || newPhone.ToString().Count() < 11 || !isValidNewPhone)
+                        {
+                            throw new PhoneNumberNotValid("PLease Enter valid Phone Number");
+                        }
+
+                        Console.WriteLine("Enter new BirthDate of the user");
+                        bool isValidNewBirthDate = DateTime.TryParse(Console.ReadLine(), out DateTime newBirthDate);
+                        if (newBirthDate >= DateTime.Now || !isValidNewBirthDate)
+                        {
+                            throw new BirthDateNotValid("Please enter valid date time in corrent format");
+                        }
+
                         userServices.UpdateUser(idSelection, newName, newPhone, newBirthDate);
                         Console.WriteLine("User updated Successfuly !");
                         Console.ReadKey();
@@ -131,6 +142,22 @@ namespace CRUD_For_Users.ConsoleMenu
                         ListMenu();
                     }
                     catch (UserNotFoundException e)
+                    {
+                        Console.Clear();
+                        Console.WriteLine(e + "\npress any key to continue !");
+                        Console.ReadKey();
+                        Console.Clear();
+                        ListMenu();
+                    }
+                    catch (BirthDateNotValid e)
+                    {
+                        Console.Clear();
+                        Console.WriteLine(e + "\npress any key to continue !");
+                        Console.ReadKey();
+                        Console.Clear();
+                        ListMenu();
+                    }
+                    catch (PhoneNumberNotValid e)
                     {
                         Console.Clear();
                         Console.WriteLine(e + "\npress any key to continue !");

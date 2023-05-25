@@ -14,9 +14,11 @@ namespace CRUD_For_Users.Services
 
         public UserServices()
         {
-            /*string? solutionFolderPath = Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory)?.Parent?.Parent?.Parent?.FullName;
-            string mainPath = Path.Combine(solutionFolderPath, "DataStorage/JsonBook.json");*/
-            mainPath = @"C:\Users\Alireza\Desktop\FileDataStorage.csv";
+            string? solutionFolderPath = Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory)?.Parent?.Parent?.Parent?.FullName;
+            string dataStorageFolderPath = Path.Combine(solutionFolderPath, "DataStorage");
+            mainPath = Path.Combine(dataStorageFolderPath, "FileDataStorage.csv");
+
+            //mainPath = @"C:\Users\Alireza\Desktop\FileDataStorage.csv";
 
             user = ReadUsersFromCsv();
         }
@@ -43,7 +45,7 @@ namespace CRUD_For_Users.Services
             };
             user.Add(newUser);
 
-            WriteUsersToCsv();
+            WriteUsersToCsv(user);
         }
 
         public List<User> ReadUser()
@@ -60,7 +62,7 @@ namespace CRUD_For_Users.Services
                 validUser.FullName = newName;
                 validUser.Phone = newPhone;
                 validUser.DateOfBirth = newDateOfBirth;
-                WriteUsersToCsv();
+                WriteUsersToCsv(user);
             }
             else
             {
@@ -75,7 +77,7 @@ namespace CRUD_For_Users.Services
             if (validUser != null)
             {
                 this.user.Remove(validUser);
-                WriteUsersToCsv();
+                WriteUsersToCsv(user);
             }
             else
             {
@@ -83,26 +85,56 @@ namespace CRUD_For_Users.Services
             }
         }
 
+
+
         public List<User> ReadUsersFromCsv()
         {
             var users = new List<User>();
 
             using (var reader = new StreamReader(mainPath))
-            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
             {
-                users = csv.GetRecords<User>().ToList();
+                string line;
+                bool isFirstLine = true;
+
+                while ((line = reader.ReadLine()) != null)
+                {
+                    if (isFirstLine)
+                    {
+                        isFirstLine = false;
+                        continue;
+                    }
+
+                    var index = line.Split(',');
+                    var user = new User
+                    {
+                        Id = int.Parse(index[0]),
+                        FullName = index[1],
+                        Phone = long.Parse(index[2]),
+                        DateOfBirth = DateTime.Parse(index[3]),
+                        UserCreationDate = DateTime.Parse(index[4]),
+                    };
+
+                    users.Add(user);
+                }
             }
 
             return users;
         }
 
-        public void WriteUsersToCsv()
+        public void WriteUsersToCsv(List<User> users)
         {
             using (var writer = new StreamWriter(mainPath))
-            using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
             {
-                csv.WriteRecords(user);
+                writer.WriteLine("Id,FullName,Phone,DateOfBirth,UserCreationDate");
+
+                foreach (var user in users)
+                {
+                    var line = $"{user.Id},{user.FullName},{user.Phone},{user.DateOfBirth},{user.UserCreationDate}"; 
+                    writer.WriteLine(line);
+                }
             }
         }
+
+
     }
 }
