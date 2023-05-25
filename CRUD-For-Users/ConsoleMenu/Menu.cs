@@ -122,7 +122,8 @@ namespace CRUD_For_Users.ConsoleMenu
                         string newName = Console.ReadLine();
 
                         Console.WriteLine("Enter new Phone Number of the user");
-                        bool isValidNewPhone = int.TryParse(Console.ReadLine(), out int newPhone);
+                        string sNewPhone = Console.ReadLine();
+                        bool isValidNewPhone = long.TryParse(sNewPhone, out long newPhone);
                         if (newPhone.ToString().Count() > 11 || newPhone.ToString().Count() < 11 || !isValidNewPhone)
                         {
                             throw new PhoneNumberNotValid("PLease Enter valid Phone Number");

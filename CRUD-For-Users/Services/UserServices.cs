@@ -18,7 +18,7 @@ namespace CRUD_For_Users.Services
             string dataStorageFolderPath = Path.Combine(solutionFolderPath, "DataStorage");
             mainPath = Path.Combine(dataStorageFolderPath, "FileDataStorage.csv");
 
-            //mainPath = @"C:\Users\Alireza\Desktop\FileDataStorage.csv";
+            //mainPath = @"normal path";
 
             user = ReadUsersFromCsv();
         }
@@ -76,7 +76,7 @@ namespace CRUD_For_Users.Services
 
             if (validUser != null)
             {
-                this.user.Remove(validUser);
+                user.Remove(validUser);
                 WriteUsersToCsv(user);
             }
             else
@@ -87,7 +87,7 @@ namespace CRUD_For_Users.Services
 
 
 
-        public List<User> ReadUsersFromCsv()
+        private List<User> ReadUsersFromCsv()
         {
             var users = new List<User>();
 
@@ -121,7 +121,7 @@ namespace CRUD_For_Users.Services
             return users;
         }
 
-        public void WriteUsersToCsv(List<User> users)
+        private void WriteUsersToCsv(List<User> users)
         {
             using (var writer = new StreamWriter(mainPath))
             {
